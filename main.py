@@ -1,7 +1,7 @@
 import random
 from collections import deque
-ROW = 5
-COL = 5
+ROW = 40
+COL = 40
 MAZE = [[[1, 0] for _ in range(COL)] for _ in range(ROW)]
 
 INIT_X, INIT_Y = 0, 0
@@ -28,7 +28,7 @@ def rdfs(r, c):
 
     for DIR in candidates:
         nc, nr = r + DIR[0], c + DIR[1]
-        if MAZE[nc][nr][0] == 0: continue
+        if MAZE[nr][nc][0] == 0: continue
 
         if DIR == [0, 1]:
             MAZE[r][c][1] += 1
@@ -39,7 +39,7 @@ def rdfs(r, c):
         elif DIR == [0, -1]:
             MAZE[r][c][1] += 8
 
-        rdfs(nc, nr)
+        rdfs(nr, nc)
 
 
 rdfs(0, 0)
