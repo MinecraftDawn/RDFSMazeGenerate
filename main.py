@@ -18,7 +18,7 @@ def rdfs(r, c):
     candidates = []
     for i in range(len(DIRECTS)):
         DIR = DIRECTS[i]
-        nc, nr = r + DIR[0], c + DIR[1]
+        nr, nc = r + DIR[0], c + DIR[1]
         if nc < 0 or nc >= COL or nr < 0 or nr >= ROW:
             continue
         candidates.append(DIR)
@@ -27,7 +27,7 @@ def rdfs(r, c):
     random.shuffle(candidates)
 
     for DIR in candidates:
-        nc, nr = r + DIR[0], c + DIR[1]
+        nr, nc = r + DIR[0], c + DIR[1]
         if MAZE[nr][nc][0] == 0: continue
 
         if DIR == [0, 1]:
@@ -41,8 +41,10 @@ def rdfs(r, c):
 
         rdfs(nr, nc)
 
-
-rdfs(0, 0)
+# for r in range(len(MAZE)):
+#     for c in range(len(MAZE[0])):
+#         print(MAZE[r][c], end='')
+#     print()
 
 def generateMaze():
     out = [[1 for _ in range(COL*2+1)] for _ in range(ROW*2+1)]
@@ -63,7 +65,6 @@ def generateMaze():
             if MAZE[r][c][1] >= 1:
                 MAZE[r][c][1] -= 1
                 out[row][col+1] = 0
-
     return out
 
 def bfs(maze):
@@ -71,12 +72,14 @@ def bfs(maze):
     visted = [[False for _ in range(len(maze[0]))] for _ in range(len(maze))]
 
     queue = deque()
-    queue.append((1, 1))
+    queue.append([1, 1])
     visted[1][1] = True
-
+    count = 0
     while queue:
+        count += 1
         r, c = queue.popleft()
         visted[r][c] = True
+        #if r == len(maze)-2 and c == len(maze[0]) -2: break
         for DIR in DIRECTS:
             R,C = DIR
             nr, nc = r+R, c+C
@@ -91,11 +94,13 @@ def bfs(maze):
                 elif DIR == [0, -1]:
                     tmp[nr][nc] = [0, -1]
 
-    for r in range(len(tmp)):
-        for c in range(len(tmp[0])):
-            print(tmp[r][c], end='')
-        print()
-    print(tmp[len(tmp)-2][len(tmp[0])-2])
+    # for r in range(len(tmp)):
+    #     for c in range(len(tmp[0])):
+    #         print(tmp[r][c], end='')
+    #     print()
+    # print(tmp[len(tmp)-2][len(tmp[0])-2])
+
+    print('Count:', count)
 
     r, c = len(tmp)-2, len(tmp[0])-2
     while tmp[r][c] != [0, 0]:
@@ -118,6 +123,7 @@ def printMaze(maze):
                 print('..', end='')
         print()
 
+rdfs(0, 0)
 
 maze = generateMaze()
 
