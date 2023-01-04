@@ -1,9 +1,10 @@
+import copy
 import random
 from collections import deque
 import heapq
 
-ROW = 40
-COL = 40
+ROW = 20
+COL = 20
 MAZE = [[[1, 0] for _ in range(COL)] for _ in range(ROW)]
 
 INIT_X, INIT_Y = 0, 0
@@ -138,6 +139,15 @@ class Node():
     def __eq__(self, other):
         return self.pos == other.pos
 
+    def __lt__(self, other):
+        return self.f < other.f
+
+    def __gt__(self, other):
+        return self.f > other.f
+
+    def __hash__(self):
+        return hash(self.pos)
+
 def findMinNode(nodes):
     findNode = nodes[0]
     findIndex = 0
@@ -155,13 +165,15 @@ def aStar(maze):
     endNode = Node(None, (endR, endC))
 
     open = [startNode]
-    close = []
+    close = set()
+
+    openSet = {startNode}
 
     while open:
-        curNode, curIndex = findMinNode(open)
+        curNode = heapq.heappop(open)
+        openSet.remove(curNode)
+        close.add(curNode)
 
-        open.pop(curIndex)
-        close.append(curNode)
 
         if curNode == endNode:
             path = []
@@ -184,11 +196,8 @@ def aStar(maze):
                 nextNode.g = curNode.g + 1
                 nextNode.h = nextNode.evalH((endR, endC))
 
-                for openNode in open:
-                    if nextNode == openNode and nextNode.g > openNode.g:
-                        continue
-
-                open.append(nextNode)
+                heapq.heappush(open, nextNode)
+                openSet.add(nextNode)
 
 
 def printMaze(maze):
