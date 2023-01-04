@@ -2,8 +2,8 @@ import random
 from collections import deque
 import heapq
 
-ROW = 10
-COL = 10
+ROW = 40
+COL = 40
 MAZE = [[[1, 0] for _ in range(COL)] for _ in range(ROW)]
 
 INIT_X, INIT_Y = 0, 0
@@ -42,11 +42,6 @@ def rdfs(r, c):
             MAZE[r][c][1] += 8
 
         rdfs(nr, nc)
-
-# for r in range(len(MAZE)):
-#     for c in range(len(MAZE[0])):
-#         print(MAZE[r][c], end='')
-#     print()
 
 def generateMaze():
     out = [[1 for _ in range(COL*2+1)] for _ in range(ROW*2+1)]
@@ -89,12 +84,6 @@ def bfs(maze):
                 queue.append((nr, nc))
                 tmp[nr][nc] = DIR.copy()
         if r == len(tmp) - 2 and c == len(tmp[0]) - 2: break
-
-    # for r in range(len(tmp)):
-    #     for c in range(len(tmp[0])):
-    #         print(tmp[r][c], end='')
-    #     print()
-    # print(tmp[len(tmp)-2][len(tmp[0])-2])
 
     print('Count:', count)
 
@@ -163,8 +152,6 @@ def aStar(maze):
     endR, endC = len(maze)-2, len(maze[0])-2
 
     startNode = Node(None, (1, 1))
-    #start.h = start.evalH((endR,endC))
-
     endNode = Node(None, (endR, endC))
 
     open = [startNode]
@@ -184,28 +171,24 @@ def aStar(maze):
                 tmp = tmp.parent
             return path
 
-        childs = []
         for DIR in DIRECTS:
             R, C = DIR
             nr, nc = curNode.pos[0] + R, curNode.pos[1] + C
             if 0 < nr < len(maze) and 0 < nc < len(maze[0]) and maze[nr][nc] == 0:
 
                 nextNode = Node(curNode, (nr, nc))
-                childs.append(nextNode)
 
-        for child in childs:
-
-            if child in close:
-                continue
-
-            child.g = curNode.g + 1
-            child.h = child.evalH((endR,endC))
-
-            for openNode in open:
-                if child == openNode and child.g > openNode.g:
+                if nextNode in close:
                     continue
 
-            open.append(child)
+                nextNode.g = curNode.g + 1
+                nextNode.h = nextNode.evalH((endR, endC))
+
+                for openNode in open:
+                    if nextNode == openNode and nextNode.g > openNode.g:
+                        continue
+
+                open.append(nextNode)
 
 
 def printMaze(maze):
