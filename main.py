@@ -88,7 +88,7 @@ def bfs(maze):
             if 0 < nr < len(maze) and 0 < nc < len(maze[0]) and maze[nr][nc] == 0 and not visted[nr][nc]:
                 queue.append((nr, nc))
                 tmp[nr][nc] = DIR.copy()
-
+        if r == len(tmp) - 2 and c == len(tmp[0]) - 2: break
 
     # for r in range(len(tmp)):
     #     for c in range(len(tmp[0])):
