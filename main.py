@@ -18,7 +18,10 @@ from utils.pathFind import aStar, bfs
 
 maze = mazeGenerate()
 
-# maze = bfs(maze)
+# for m in maze:
+#     print(m)
+
+# # maze = bfs(maze)
 path = aStar(maze)
 for pos in path:
     r,c = pos
